@@ -62,14 +62,14 @@ const TambahPegawai = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+    <div className='z-10 fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-semibold mb-4">Tambah Pegawai</h2>
         {msg && <div className="text-green-500 mb-4">{msg}</div>}
         <form onSubmit={saveUser}>
           <div className="mb-4">
             <label htmlFor="nama" className="block text-gray-700 font-medium mb-2">Nama</label>
-            <input type="text" id="name" name="name" value={name} className="px-3 py-2 border border-slate-400 rounded-md focus:outline-none focus:border-blue-500" onChange={(e) => setName(e.target.value)}/>
+            <input type="text" id="nama" name="nama" value={name} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>

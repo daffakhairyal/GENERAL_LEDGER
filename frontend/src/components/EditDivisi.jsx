@@ -43,7 +43,7 @@ const EditDivisi = ({ isVisible, onClose, divisionId }) => {
     if (!isVisible) return null;
 
     return (
-        <div className='fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+        <div className='z-11 fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h2 className="text-2xl font-semibold mb-4">Edit Divisi</h2>
                 {msg && <div className="text-green-500 mb-4">{msg}</div>}
