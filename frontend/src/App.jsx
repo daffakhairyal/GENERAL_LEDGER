@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './components/login';
@@ -10,10 +11,12 @@ import UsersPage from './pages/Users';
 import DivisionPage from './pages/Division';
 import SuratMasukTemplate from './pages/SuratMasukTemplate';
 import SuratKeluarTemplate from './pages/SuratKeluarTemplate';
+import FileJournalEntryPage from './pages/JournalEntryPage'; // Import FileJournalEntryPage
+import ReportGeneralLedgerPage from './pages/ReportGeneralLedgerPage';
 
 const App = () => {
   return (
-    <div>
+    <div className=''>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -26,6 +29,8 @@ const App = () => {
           <Route path="/divisions" element={<DivisionPage />} />
           <Route path="/surat-masuk/:id" element={<SuratMasukTemplate />} />
           <Route path="/surat-keluar/:id" element={<SuratKeluarTemplate />} />
+          <Route path="/file/journal-entry" element={<FileJournalEntryPage />} /> 
+          <Route path="/report/general-ledger" element={<ReportGeneralLedgerPage />} />
         </Routes>
       </BrowserRouter>
     </div>

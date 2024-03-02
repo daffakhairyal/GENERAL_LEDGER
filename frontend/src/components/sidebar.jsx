@@ -8,7 +8,7 @@ import { TbReport } from "react-icons/tb";
 import { FaUser } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, useNavigate } from "react-router-dom";
-import { LogOut,reset } from '../features/authSlice';
+import { LogOut, reset } from '../features/authSlice';
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { FaNetworkWired } from "react-icons/fa6";
 
@@ -40,9 +40,6 @@ const Sidebar = () => {
         [submenuName]: !prevState[submenuName],
       }));
     };
-
-
-    
   
     //console.log("User:", user); // Menambahkan console log untuk menampilkan data user
   
@@ -100,7 +97,7 @@ const Sidebar = () => {
               <span>
                 <IoFileTrayStackedSharp className={``} />
               </span>
-              <span className={`ml-4 ${!open && "opacity-0"}`}>File</span>
+              <span className={`ml-4 ${!open && "opacity-0"}`}>General Ledger</span>
             </div>
             <span
               className={`transform ${
@@ -113,18 +110,14 @@ const Sidebar = () => {
   
           {/* Item submenu "File" */}
           <div
-            className={`leading-7 flex-row items-center text-gray-200 font-thin mt-2 w-4/5 mx-auto transition-opacity duration-500 ${
-              activeSubMenus["File"] ? "opacity-100" : "opacity-0"
-            } ${activeSubMenus["File"] ? "h-auto" : "h-0"} overflow-hidden`}
-          ><NavLink to={'/file/surat-masuk'}>
-            <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
-              Surat Masuk
-            </h1>
-          </NavLink >
-            <NavLink to={'/file/surat-keluar'}>
-            <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1">
-              Surat Keluar
-            </h1>
+            className={`leading-7 flex-row items-center text-gray-200 font-thin mt-2 w-4/5 mx-auto transition-opacity duration-500 transform ${
+              activeSubMenus["File"] ? "opacity-100 h-auto" : "opacity-0 h-0"
+            } ${activeSubMenus["File"] ? "h-auto" : "h-0"}  overflow-hidden`}
+          >
+            <NavLink to={"/file/journal-entry"}>
+              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
+                Journal Entry
+              </h1>
             </NavLink>
           </div>
   
@@ -142,7 +135,7 @@ const Sidebar = () => {
             </div>
             <span
               className={`transform ${
-                activeSubMenus["File"] ? "rotate-180" : ""
+                activeSubMenus["Report"] ? "rotate-180" : ""
               } duration-500 ${!open && "opacity-0"}`}
             >
               <BiChevronDown />
@@ -155,15 +148,10 @@ const Sidebar = () => {
               activeSubMenus["Report"] ? "opacity-100" : "opacity-0"
             } ${activeSubMenus["Report"] ? "h-auto" : "h-0"} overflow-hidden`}
           >
-            <NavLink to={'/record/surat-masuk'}>
-            <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
-              Surat Masuk
-            </h1>
-            </NavLink>
-            <NavLink to={'/record/surat-keluar'}>
-            <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
-              Surat Keluar
-            </h1>
+            <NavLink to={'/report/general-ledger'}>
+              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
+                General Ledger
+              </h1>
             </NavLink>
           </div>
   
@@ -177,43 +165,36 @@ const Sidebar = () => {
           {/* Item menu "Admin" */}
           {user && user.role === "admin" && user.division === "HRD" && (
             <NavLink to={'/users'}>
-            <div
-              className={`mt-3 flex items-center text-gray-200 rounded-md ${
-                open ? "text-lg p-1.5" : "text-2xl p-1"
-              } duration-500 cursor-pointer hover:bg-orange-100 hover:text-black`}
-              
-            >
-              <span>
-                <FaUser className={` `} />
-              </span>
-              <span className={`ml-4 ${!open && "opacity-0"}`} >Users</span>
-            </div>
+              <div
+                className={`mt-3 flex items-center text-gray-200 rounded-md ${
+                  open ? "text-lg p-1.5" : "text-2xl p-1"
+                } duration-500 cursor-pointer hover:bg-orange-100 hover:text-black`}
+              >
+                <span>
+                  <FaUser className={` `} />
+                </span>
+                <span className={`ml-4 ${!open && "opacity-0"}`} >Users</span>
+              </div>
             </NavLink>
-            
-            
           )}
           
           {/* Item menu "Division" */}
           {user && user.role === "admin" && user.division === "HRD" && (
             <NavLink to={'/divisions'}>
-            <div
-              className={`mt-3 flex items-center text-gray-200 rounded-md ${
-                open ? "text-lg p-1.5" : "text-3xl p-1"
-              } duration-500 cursor-pointer hover:bg-orange-100 hover:text-black`}
-              
-            >
-              <span>
-                <FaNetworkWired className={` `} />
-              </span>
-              <span className={`ml-4 ${!open && "opacity-0"}`} >Division</span>
-            </div>
+              <div
+                className={`mt-3 flex items-center text-gray-200 rounded-md ${
+                  open ? "text-lg p-1.5" : "text-3xl p-1"
+                } duration-500 cursor-pointer hover:bg-orange-100 hover:text-black`}
+              >
+                <span>
+                  <FaNetworkWired className={` `} />
+                </span>
+                <span className={`ml-4 ${!open && "opacity-0"}`} >Division</span>
+              </div>
             </NavLink>
-            
-            
           )}
 
-
-        {/*Logout*/}
+          {/*Logout*/}
           <div
             className={`mt-3 flex items-center text-gray-200 rounded-md  ${
               open ? "text-lg p-1.5" : "text-2xl p-1"
@@ -233,4 +214,3 @@ const Sidebar = () => {
   };
   
   export default Sidebar;
-  
