@@ -117,7 +117,7 @@ const TambahJournalEntry = ({ isVisible, onClose, user }) => {
                                 type='text'
                                 name='description'
                                 value={entry.description}
-                                className='w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
+                                className='w-1/3 px-3 py-2  border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
                                 onChange={(e) => handleInputChange(index, e)}
                                 placeholder='Description'
                             />
@@ -125,7 +125,7 @@ const TambahJournalEntry = ({ isVisible, onClose, user }) => {
                                 type='number'
                                 name='debit'
                                 value={entry.debit}
-                                className='w-1/6 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
+                                className='w-1/6 px-3 py-2 mx-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
                                 onChange={(e) => handleInputChange(index, e)}
                                 placeholder='Debit'
                             />

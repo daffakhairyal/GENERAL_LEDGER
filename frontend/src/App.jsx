@@ -13,6 +13,7 @@ import SuratMasukTemplate from './pages/SuratMasukTemplate';
 import SuratKeluarTemplate from './pages/SuratKeluarTemplate';
 import FileJournalEntryPage from './pages/JournalEntryPage'; // Import FileJournalEntryPage
 import ReportGeneralLedgerPage from './pages/ReportGeneralLedgerPage';
+import FileCOAPage from './pages/FileCOAPage';
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/surat-keluar/:id" element={<SuratKeluarTemplate />} />
           <Route path="/file/journal-entry" element={<FileJournalEntryPage />} /> 
           <Route path="/report/general-ledger" element={<ReportGeneralLedgerPage />} />
+          <Route path="/file/coa" element={<FileCOAPage />} />
         </Routes>
       </BrowserRouter>
     </div>
