@@ -114,11 +114,21 @@ const Sidebar = () => {
               activeSubMenus["File"] ? "opacity-100 h-auto" : "opacity-0 h-0"
             } ${activeSubMenus["File"] ? "h-auto" : "h-0"}  overflow-hidden`}
           >
+            <NavLink to={"/file/coa"}>
+              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
+                Chart of Accounts
+              </h1>
+            </NavLink>
+            
+
+
             <NavLink to={"/file/journal-entry"}>
               <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
                 Journal Entry
               </h1>
             </NavLink>
+
+            
           </div>
   
           {/* Submenu "Report" */}

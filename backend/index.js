@@ -10,6 +10,7 @@ import DivisionRoute from "./routes/DivisionRoute.js"
 import SuratMasukRoute from "./routes/SuratMasukRoute.js"
 import SuratKeluarRoute from "./routes/SuratKeluarRoute.js"
 import GLRoute from "./routes/GLRoute.js"
+import COARoute from "./routes/COARoute.js"
 
 dotenv.config();
 
@@ -53,7 +54,8 @@ app.use(AuthRoute);
 app.use(DivisionRoute);
 app.use(SuratMasukRoute);
 app.use(SuratKeluarRoute);
-app.use(GLRoute)
+app.use(GLRoute);
+app.use(COARoute);
 
 store.sync();
 app.listen(PORT,()=> {

@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import { IoMdAddCircle } from 'react-icons/io';
@@ -13,6 +11,7 @@ import HapusJournalEntry from './HapusJournalEntry';
 
 const JournalEntryComponent = ({ user }) => {
     const [journalEntries, setJournalEntries] = useState([]);
+    const [statusDataLoaded, setStatusDataLoaded] = useState(false); // State to track whether status data is loaded
     const [showJournalEntry, setShowJournalEntry] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -22,19 +21,26 @@ const JournalEntryComponent = ({ user }) => {
     const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
-        getJournalEntries();
-    }, [currentPage, entriesPerPage]);
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/journal_entries');
+                console.log('Journal entries response:', response.data)
+                setJournalEntries(response.data);
+                setStatusDataLoaded(true); // Set statusDataLoaded to true when data is fetched successfully
+            } catch (error) {
+                console.error('Error fetching journal entries: ', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        // Update status data loaded whenever journalEntries changes
+        setStatusDataLoaded(true);
+    }, [journalEntries]);
 
     const navigate = useNavigate();
-
-    const getJournalEntries = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/journal_entries');
-            setJournalEntries(response.data);
-        } catch (error) {
-            console.error('Error fetching journal entries: ', error);
-        }
-    };
 
     const handleEditJournalEntry = (journalEntryId) => {
         setShowEditModal(true);
@@ -47,7 +53,6 @@ const JournalEntryComponent = ({ user }) => {
     };
 
     const handlePrintJournalEntry = (journalEntryId) => {
-        // Navigate to JournalEntryTemplate page with the selected journal entry id
         const journalEntry = journalEntries.find(item => item.uuid === journalEntryId);
         if (journalEntry) {
             navigate(`/journal-entry/${journalEntryId}`);
@@ -56,39 +61,66 @@ const JournalEntryComponent = ({ user }) => {
         }
     };
 
-    const handleLockJournalEntry = async (journalEntryId) => {
+    const handleLockUnlockJournalEntry = async (journalEntryId, newStatus) => {
         try {
-            await axios.patch(`http://localhost:5000/journal_entries/${journalEntryId}`, { status: 1 });
-            const updatedJournalEntries = journalEntries.map(entry => {
-                if (entry.uuid === journalEntryId) {
-                    return { ...entry, status: 1 };
-                }
-                return entry;
+            await axios.patch(`http://localhost:5000/journal_entries/${journalEntryId}`, { status: newStatus });
+            // Update status di state lokal
+            setJournalEntries(prevEntries => {
+                return prevEntries.map(entry => {
+                    if (entry.uuid === journalEntryId) {
+                        return { ...entry, status: newStatus };
+                    }
+                    return entry;
+                });
             });
-            setJournalEntries(updatedJournalEntries);
         } catch (error) {
-            console.error("Error locking journal entry: ", error);
-        }
-    };
-
-    const handleUnlockJournalEntry = async (journalEntryId) => {
-        try {
-            await axios.patch(`http://localhost:5000/journal_entries/${journalEntryId}`, { status: 0 });
-            const updatedJournalEntries = journalEntries.map(entry => {
-                if (entry.uuid === journalEntryId) {
-                    return { ...entry, status: 0 };
-                }
-                return entry;
-            });
-            setJournalEntries(updatedJournalEntries);
-        } catch (error) {
-            console.error("Error unlocking journal entry: ", error);
+            console.error(`Error ${newStatus === 1 ? 'locking' : 'unlocking'} journal entry: `, error);
         }
     };
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString();
     };
+
+    const renderActionButtons = (entry) => {
+        console.log('Entry status:', entry.status);
+    
+        if (!statusDataLoaded) return null;
+    
+        switch (entry.status) {
+            case true: // Jika status adalah true (misalnya, aktif atau terkunci)
+                return (
+                    <Fragment>
+                        <button className="bg-yellow-400 hover:bg-yellow-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handlePrintJournalEntry(entry.uuid)}>
+                            <FaPrint className='text-zinc-100' />
+                        </button>
+                        <button className="bg-green-400 hover:bg-green-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleLockUnlockJournalEntry(entry.uuid, false)}>
+                            <FaUnlock className='text-zinc-100' />
+                        </button>
+                    </Fragment>
+                );
+            case false: // Jika status adalah false (misalnya, tidak aktif atau terbuka)
+                return (
+                    <Fragment>
+                        <button className="bg-blue-400 hover:bg-blue-500 duration-500 text-white font-bold py-2 px-4 rounded" onClick={() => handleEditJournalEntry(entry.uuid)}>
+                            <FaEdit className='text-zinc-100' />
+                        </button>
+                        <button className="bg-red-400 hover:bg-red-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleDeleteJournalEntry(entry.uuid)}>
+                            <MdDelete className='text-zinc-100' />
+                        </button>
+                        <button className="bg-yellow-400 hover:bg-yellow-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handlePrintJournalEntry(entry.uuid)}>
+                            <FaPrint className='text-zinc-100' />
+                        </button>
+                        <button className="bg-green-400 hover:bg-green-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleLockUnlockJournalEntry(entry.uuid, true)}>
+                            <FaLock className='text-zinc-100' />
+                        </button>
+                    </Fragment>
+                );
+            default:
+                return null;
+        }
+    };
+    
 
     const filteredJournalEntries = journalEntries.filter((entry) => {
         return (
@@ -154,31 +186,7 @@ const JournalEntryComponent = ({ user }) => {
                                     {currentEntries.map((entry, index) => (
                                         <tr key={entry.uuid} className='hover:bg-gray-100'>
                                             <td className="border border-slate-200 px-4 py-2 flex justify-center">
-                                                {entry.status === 0 ? (
-                                                    <Fragment>
-                                                        <button className="bg-blue-400 hover:bg-blue-500 duration-500 text-white font-bold py-2 px-4 rounded" onClick={() => handleEditJournalEntry(entry.uuid)}>
-                                                        <FaEdit className='text-zinc-100' />
-                                                        </button>
-                                                        <button className="bg-red-400 hover:bg-red-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleDeleteJournalEntry(entry.uuid)}>
-                                                        <MdDelete className='text-zinc-100' />
-                                                        </button>
-                                                        <button className="bg-yellow-400 hover:bg-yellow-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handlePrintJournalEntry(entry.uuid)}>
-                                                        <FaPrint className='text-zinc-100' />
-                                                        </button>
-                                                        <button className="bg-green-400 hover:bg-green-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleLockJournalEntry(entry.uuid)}>
-                                                        <FaLock className='text-zinc-100' />
-                                                        </button>
-                                                    </Fragment>
-                                                ) : (
-                                                    <Fragment>
-                                                        <button className="bg-yellow-400 hover:bg-yellow-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handlePrintJournalEntry(entry.uuid)}>
-                                                        <FaPrint className='text-zinc-100' />
-                                                        </button>
-                                                        <button className="bg-green-400 hover:bg-green-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleUnlockJournalEntry(entry.uuid)}>
-                                                        <FaUnlock className='text-zinc-100' />
-                                                        </button>
-                                                    </Fragment>
-                                                )}
+                                                {renderActionButtons(entry)}
                                             </td>
                                             <td className='border border-slate-200 px-4 py-2'>{indexOfFirstEntry + index + 1}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{formatDate(entry.date)}</td>
