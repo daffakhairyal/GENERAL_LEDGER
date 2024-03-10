@@ -124,7 +124,7 @@ const FileSuratMasuk = ({ user }) => {
                 <div className='text-2xl font-semibold'>
                     <h1>Surat Masuk</h1>
                 </div>
-                <div className='bg-zinc-100 mt-5 shadow-md rounded h-[75vh] '>
+                <div className='bg-zinc-100 mt-5 shadow-md rounded h-full '>
                     <div className='m-3 p-1'>
                         <button className='flex rounded bg-blue-400 hover:bg-blue-500 duration-500 p-2 mt-2 shadow-md' onClick={() => setShowTambahModal(true)}>
                             <IoMdAddCircle className='text-zinc-100 text-xl mt-0.5' />

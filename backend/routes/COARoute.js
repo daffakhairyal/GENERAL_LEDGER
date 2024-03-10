@@ -3,10 +3,10 @@ import { getChartOfAccounts, getChartOfAccountById, createChartOfAccount, update
 
 const router = express.Router();
 
-router.get('/coa', getChartOfAccounts);
-router.get('/coa/:id', getChartOfAccountById);
-router.post('/coa', createChartOfAccount);
-router.patch('/coa/:id', updateChartOfAccount);
-router.delete('/coa/:id', deleteChartOfAccount);
+router.get('/chart_of_account', getChartOfAccounts);
+router.get('/chart_of_account/:id', getChartOfAccountById);
+router.post('/chart_of_account', createChartOfAccount);
+router.patch('/chart_of_account/:id', updateChartOfAccount);
+router.delete('/chart_of_account/:id', deleteChartOfAccount);
 
 export default router;

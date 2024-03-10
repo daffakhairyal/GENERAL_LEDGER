@@ -121,7 +121,7 @@ const RecordSuratKeluar = ({ user }) => {
                 <div className='text-2xl font-semibold'>
                     <h1>Surat Keluar</h1>
                 </div>
-                <div className='bg-zinc-100 mt-5 shadow-md rounded h-[75vh] '>
+                <div className='bg-zinc-100 mt-5 shadow-md rounded h-full '>
                     <div className='m-3 p-1'>
                         <input
                             type="text"

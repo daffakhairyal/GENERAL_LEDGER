@@ -128,6 +128,12 @@ const Sidebar = () => {
               </h1>
             </NavLink>
 
+            <NavLink to={"/file/petty_cash"}>
+              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
+                Petty Cash
+              </h1>
+            </NavLink>
+
             
           </div>
   
@@ -161,6 +167,11 @@ const Sidebar = () => {
             <NavLink to={'/report/general-ledger'}>
               <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
                 General Ledger
+              </h1>
+            </NavLink>
+            <NavLink to={'/report/petty_cash'}>
+              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
+                Petty Cash
               </h1>
             </NavLink>
           </div>

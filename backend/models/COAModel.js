@@ -15,10 +15,8 @@ const ChartOfAccount = db.define('chart_of_account', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-        validate: {
-            notEmpty: true,
-        }
+
+
     },
     level: {
         type: DataTypes.INTEGER,
@@ -28,40 +26,30 @@ const ChartOfAccount = db.define('chart_of_account', {
         }
     },
     account: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            notEmpty: true,
-        }
     },
     induk: {
-        type: DataTypes.INTEGER,
-        validate: {
-            notEmpty: true,
-        }
+        type: DataTypes.STRING,
+
+
     },
     klasifikasi: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            notEmpty: true,
-        }
+
     },
     defSaldo: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            notEmpty: true,
-        }
+        allowNull: true, // atau sesuai kebutuhan Anda
+
     },
     type: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            notEmpty: true,
-        }
-    }
+        allowNull: true,
+        unique: false,
+    },
+    
 }, {
     freezeTableName: true
 });

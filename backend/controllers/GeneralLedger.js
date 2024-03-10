@@ -30,7 +30,7 @@ export const createJournalEntry = async (req, res) => {
         const newJournalEntry = await JournalEntry.create(req.body);
         res.status(201).json({ msg: 'Entri jurnal berhasil ditambahkan', data: newJournalEntry });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        res.status(400).json({ msg: error.message }); // Menampilkan pesan error yang diterima dari Sequelize
     }
 };
 
@@ -47,9 +47,10 @@ export const updateJournalEntry = async (req, res) => {
         await journalEntry.update(req.body);
         res.status(200).json({ msg: 'Entri jurnal berhasil diupdate' });
     } catch (error) {
-        res.status(400).json({ msg: error.message });
+        res.status(400).json({ msg: error.message }); // Menampilkan pesan error yang diterima dari Sequelize
     }
 };
+
 
 export const deleteJournalEntry = async (req, res) => {
     try {
