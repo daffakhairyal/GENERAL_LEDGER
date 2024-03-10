@@ -53,7 +53,7 @@ const EditSuratKeluar = ({ isVisible, onClose, user, suratKeluarId }) => {
     if (!isVisible || !suratKeluar) return null;
 
     return (
-        <div className='z-10 fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+        <div className='fixed inset-0 flex items-center justify-center z-50 overflow-auto bg-black bg-opacity-50'>
             <div className="bg-white p-8 rounded-lg shadow-md w-[100vh]">
                 <h2 className="text-2xl font-semibold mb-4">Edit Surat Keluar</h2>
                 {msg && <div className="text-green-500 mb-4">{msg}</div>}

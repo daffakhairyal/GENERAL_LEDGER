@@ -42,7 +42,7 @@ const HapusPegawai = ({ isVisible, onClose, userId }) => {
     if (!isVisible) return null;
 
     return (
-        <div className='z-10 fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+        <div className='fixed inset-0 flex items-center justify-center z-50 overflow-auto bg-black bg-opacity-50'>
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h2 className="text-2xl font-semibold mb-4">Hapus Pegawai</h2>
                 <div className="mb-4">

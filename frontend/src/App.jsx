@@ -14,6 +14,8 @@ import SuratKeluarTemplate from './pages/SuratKeluarTemplate';
 import FileJournalEntryPage from './pages/JournalEntryPage'; // Import FileJournalEntryPage
 import ReportGeneralLedgerPage from './pages/ReportGeneralLedgerPage';
 import FileCOAPage from './pages/FileCOAPage';
+import PettyCashPage from './pages/PettyCashPage';
+import ReportPettyCashPage from './pages/ReportPettyCashPage';
 
 const App = () => {
   return (
@@ -33,6 +35,8 @@ const App = () => {
           <Route path="/file/journal-entry" element={<FileJournalEntryPage />} /> 
           <Route path="/report/general-ledger" element={<ReportGeneralLedgerPage />} />
           <Route path="/file/coa" element={<FileCOAPage />} />
+          <Route path="/file/petty_cash" element={<PettyCashPage />} />
+          <Route path="/report/petty_cash" element={<ReportPettyCashPage />} />
         </Routes>
       </BrowserRouter>
     </div>

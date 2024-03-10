@@ -11,6 +11,7 @@ import SuratMasukRoute from "./routes/SuratMasukRoute.js"
 import SuratKeluarRoute from "./routes/SuratKeluarRoute.js"
 import GLRoute from "./routes/GLRoute.js"
 import COARoute from "./routes/COARoute.js"
+import PettyCashRoute from "./routes/PettyCashRoute.js"
 
 dotenv.config();
 
@@ -48,7 +49,7 @@ app.use(cors({
     origin: 'http://localhost:5173'
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(UserRoute);
 app.use(AuthRoute);
 app.use(DivisionRoute);
@@ -56,6 +57,7 @@ app.use(SuratMasukRoute);
 app.use(SuratKeluarRoute);
 app.use(GLRoute);
 app.use(COARoute);
+app.use(PettyCashRoute)
 
 store.sync();
 app.listen(PORT,()=> {

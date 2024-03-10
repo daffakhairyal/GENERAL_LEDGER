@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
-import Pagination from "./Pagination";
+import Pagination from "../Pagination";
 import * as XLSX from 'xlsx';
 
-const ReportGeneralLedger = () => {
-    const [journalEntries, setJournalEntries] = useState([]);
+const ReportPettyCash = () => {
+    const [pettyCashEntries, setPettyCashEntries] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
@@ -12,15 +12,15 @@ const ReportGeneralLedger = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
-        getJournalEntries();
+        getPettyCashEntries();
     }, [currentPage, entriesPerPage]);
 
-    const getJournalEntries = async () => {
+    const getPettyCashEntries = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/journal_entries");
-            setJournalEntries(response.data);
+            const response = await axios.get("http://localhost:5000/petty_cash");
+            setPettyCashEntries(response.data);
         } catch (error) {
-            console.error("Error fetching journal entries: ", error);
+            console.error("Error fetching petty cash entries: ", error);
         }
     };
 
@@ -38,7 +38,7 @@ const ReportGeneralLedger = () => {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
     };
 
-    const filteredEntries = journalEntries.filter(entry => {
+    const filteredEntries = pettyCashEntries.filter(entry => {
         return entry.description.toLowerCase().includes(searchTerm.toLowerCase()) &&
                entry.createdBy.toLowerCase().includes(searchTerm.toLowerCase()) &&
                (fromDate === '' || new Date(entry.tanggal) >= new Date(fromDate)) &&
@@ -58,36 +58,24 @@ const ReportGeneralLedger = () => {
 
     const exportToExcel = () => {
         const headers = [
-            "Account",
             "Description",
             "Date",
-            "No. Bukti",
-            "Tipe",
-            "Detail",
             "Debit",
             "Credit",
             "Created By"
         ];
     
         const dataForExport = currentEntries.map(entry => ({
-            Account: entry.account,
             Description: entry.description,
             Date: new Date(entry.tanggal),
-            "No. Bukti": entry.noVoucher,
-            Tipe: entry.jenis,
-            Detail: entry.detail,
             Debit: entry.debit,
             Credit: entry.credit,
             "Created By": entry.createdBy,
         }));
     
         dataForExport.push({
-            Account: 'Total',
-            Description: '',
+            Description: 'Total',
             Date: '',
-            "No. Bukti": '',
-            Tipe: '',
-            Detail: '',
             Debit: totalDebit,
             Credit: totalCredit,
             "Created By": '',
@@ -95,15 +83,15 @@ const ReportGeneralLedger = () => {
     
         const worksheet = XLSX.utils.json_to_sheet(dataForExport, { header: headers });
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "General Ledger");
-        XLSX.writeFile(workbook, "general_ledger.xlsx");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Petty Cash");
+        XLSX.writeFile(workbook, "petty_cash.xlsx");
     };
 
     return (
         <Fragment>
             <div className='m-8'>
                 <div className='text-2xl font-semibold'>
-                    <h1>General Ledger</h1>
+                    <h1>Petty Cash Report</h1>
                 </div>
                 <div className='bg-zinc-100 mt-5 shadow-md rounded h-full '>
                     <div className='m-3 p-1'>
@@ -148,11 +136,8 @@ const ReportGeneralLedger = () => {
                                 <thead className="bg-gray-200">
                                     <tr>
                                         <th className="px-4 py-2">Account</th>
-                                        <th className="px-4 py-2">Description</th>
-                                        <th className="px-4 py-2">Date</th>
-                                        <th className="px-4 py-2">No. Bukti</th>
-                                        <th className="px-4 py-2">Tipe</th>
                                         <th className="px-4 py-2">Detail</th>
+                                        <th className="px-4 py-2">Date</th>
                                         <th className="px-4 py-2">Debit</th>
                                         <th className="px-4 py-2">Credit</th>
                                         <th className="px-4 py-2">Created By</th>
@@ -164,9 +149,6 @@ const ReportGeneralLedger = () => {
                                             <td className="border border-slate-200 px-4 py-2">{entry.account}</td>
                                             <td className="border border-slate-200 px-4 py-2">{entry.description}</td>
                                             <td className="border border-slate-200 px-4 py-2">{formatDate(entry.tanggal)}</td>
-                                            <td className="border border-slate-200 px-4 py-2">{entry.noVoucher}</td>
-                                            <td className="border border-slate-200 px-4 py-2">{entry.jenis}</td>
-                                            <td className="border border-slate-200 px-4 py-2">{entry.detail}</td>
                                             <td className="border border-slate-200 px-4 py-2">{formatCurrency(entry.debit)}</td>
                                             <td className="border border-slate-200 px-4 py-2">{formatCurrency(entry.credit)}</td>
                                             <td className="border border-slate-200 px-4 py-2">{entry.createdBy}</td>
@@ -175,7 +157,7 @@ const ReportGeneralLedger = () => {
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colSpan="6" className="px-4 py-2 font-semibold text-right">Total:</td>
+                                        <td colSpan="3" className="px-4 py-2 font-semibold text-right">Total:</td>
                                         <td className="border border-slate-200 px-4 py-2 font-semibold">{formatCurrency(totalDebit)}</td>
                                         <td className="border border-slate-200 px-4 py-2 font-semibold">{formatCurrency(totalCredit)}</td>
                                         <td className="border border-slate-200 px-4 py-2"></td>
@@ -198,4 +180,4 @@ const ReportGeneralLedger = () => {
     );
 }
 
-export default ReportGeneralLedger;
+export default ReportPettyCash;

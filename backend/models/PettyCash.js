@@ -3,7 +3,7 @@ import db from "../config/Database.js";
 
 const { DataTypes } = Sequelize;
 
-const JournalEntry = db.define('journal_entry', {
+const PettyCash = db.define('petty_cash', {
     uuid: {
         type: DataTypes.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -46,6 +46,14 @@ const JournalEntry = db.define('journal_entry', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    divisi:{
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    karyawan:{
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -55,4 +63,4 @@ const JournalEntry = db.define('journal_entry', {
     freezeTableName: true
 });
 
-export default JournalEntry;
+export default PettyCash;
