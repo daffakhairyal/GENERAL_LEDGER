@@ -15,7 +15,7 @@ const PettyCashComponent = ({ user }) => {
     const [showPettyCashEntry, setShowPettyCashEntry] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [selectedPettyCashEntryId, setSelectedPettyCashEntryId] = useState(null);
+    const [selectedPettyCashEntryKey, setSelectedPettyCashEntryKey] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [entriesPerPage, setEntriesPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
@@ -25,7 +25,8 @@ const PettyCashComponent = ({ user }) => {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/petty_cash');
-                setPettyCashEntries(response.data);
+                const processedEntries = processEntries(response.data);
+                setPettyCashEntries(processedEntries);
                 setStatusDataLoaded(true);
             } catch (error) {
                 console.error('Error fetching petty cash entries: ', error);
@@ -34,6 +35,23 @@ const PettyCashComponent = ({ user }) => {
 
         fetchData();
     }, []);
+
+    const processEntries = (entries) => {
+        const groupedEntries = {};
+        entries.forEach(entry => {
+            const key = `${entry.noVoucher}-${entry.tanggal}-${entry.jenis}`;
+            if (groupedEntries[key]) {
+                groupedEntries[key].debit += entry.debit;
+                groupedEntries[key].credit += entry.credit;
+            } else {
+                groupedEntries[key] = { ...entry };
+            }
+        });
+        return Object.entries(groupedEntries).map(([key, value]) => ({
+            ...value,
+            key // Menambahkan kunci sebagai properti di setiap entri
+        }));
+    };
 
     const navigate = useNavigate();
 
@@ -51,37 +69,39 @@ const PettyCashComponent = ({ user }) => {
         }
     };
 
-    const handleEditPettyCashEntry = (pettyCashEntryId) => {
+    const handleEditPettyCashEntry = (entryKey) => {
         setShowEditModal(true);
-        setSelectedPettyCashEntryId(pettyCashEntryId);
-        const selectedEntry = pettyCashEntries.find(entry => entry.uuid === pettyCashEntryId);
-        setEditEntry(selectedEntry); // Atur entri petty cash yang akan diedit ke state untuk digunakan di EditPettyCash
-    };
-    const handleDeletePettyCashEntry = (pettyCashEntryId) => {
-        setShowDeleteModal(true);
-        setSelectedPettyCashEntryId(pettyCashEntryId);
+        setSelectedPettyCashEntryKey(entryKey);
     };
 
-    const handlePrintPettyCashEntry = (pettyCashEntryId) => {
-        const pettyCashEntry = pettyCashEntries.find(item => item.uuid === pettyCashEntryId);
-        if (pettyCashEntry) {
-            navigate(`/petty-cash-entry/${pettyCashEntryId}`);
+    const handleDeletePettyCashEntry = (entryKey) => {
+        setShowDeleteModal(true);
+        setSelectedPettyCashEntryKey(entryKey);
+    };
+
+    const handlePrintPettyCashEntry = (entryKey) => {
+        const entry = pettyCashEntries.find(item => item.key === entryKey);
+        if (entry) {
+            navigate(`/petty-cash-entry/${entry.uuid}`);
         } else {
-            console.error(`Petty cash entry with id ${pettyCashEntryId} not found.`);
+            console.error(`Petty cash entry with key ${entryKey} not found.`);
         }
     };
 
-    const handleLockUnlockPettyCashEntry = async (pettyCashEntryId, newStatus) => {
+    const handleLockUnlockPettyCashEntry = async (entryKey, newStatus) => {
         try {
-            await axios.patch(`http://localhost:5000/petty_cash/${pettyCashEntryId}`, { status: newStatus });
-            setPettyCashEntries(prevEntries => {
-                return prevEntries.map(entry => {
-                    if (entry.uuid === pettyCashEntryId) {
-                        return { ...entry, status: newStatus };
-                    }
-                    return entry;
+            const entry = pettyCashEntries.find(item => item.key === entryKey);
+            if (entry) {
+                await axios.patch(`http://localhost:5000/petty_cash/${entry.uuid}`, { status: newStatus });
+                setPettyCashEntries(prevEntries => {
+                    return prevEntries.map(entry => {
+                        if (entry.key === entryKey) {
+                            return { ...entry, status: newStatus };
+                        }
+                        return entry;
+                    });
                 });
-            });
+            }
         } catch (error) {
             console.error(`Error ${newStatus === 1 ? 'locking' : 'unlocking'} petty cash entry: `, error);
         }
@@ -98,11 +118,11 @@ const PettyCashComponent = ({ user }) => {
             case true:
                 return (
                     <Fragment>
-                        <button className="bg-yellow-400 hover:bg-yellow-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handlePrintPettyCashEntry(entry.uuid)}>
+                        <button className="bg-yellow-400 hover:bg-yellow-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handlePrintPettyCashEntry(entry.key)}>
                             <FaPrint className='text-zinc-100' />
                         </button>
                         {user.role === 'admin' && (
-                            <button className="bg-green-400 hover:bg-green-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleLockUnlockPettyCashEntry(entry.uuid, false)}>
+                            <button className="bg-green-400 hover:bg-green-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleLockUnlockPettyCashEntry(entry.key, false)}>
                                 <FaUnlock className='text-zinc-100' />
                             </button>
                         )}
@@ -111,16 +131,16 @@ const PettyCashComponent = ({ user }) => {
             case false:
                 return (
                     <Fragment>
-                        <button className="bg-blue-400 hover:bg-blue-500 duration-500 text-white font-bold py-2 px-4 rounded" onClick={() => handleEditPettyCashEntry(entry.uuid)}>
+                        <button className="bg-blue-400 hover:bg-blue-500 duration-500 text-white font-bold py-2 px-4 rounded" onClick={() => handleEditPettyCashEntry(entry.key)}>
                             <FaEdit className='text-zinc-100' />
                         </button>
-                        <button className="bg-red-400 hover:bg-red-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleDeletePettyCashEntry(entry.uuid)}>
+                        <button className="bg-red-400 hover:bg-red-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleDeletePettyCashEntry(entry.key)}>
                             <MdDelete className='text-zinc-100' />
                         </button>
-                        <button className="bg-yellow-400 hover:bg-yellow-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handlePrintPettyCashEntry(entry.uuid)}>
+                        <button className="bg-yellow-400 hover:bg-yellow-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handlePrintPettyCashEntry(entry.key)}>
                             <FaPrint className='text-zinc-100' />
                         </button>
-                        <button className="bg-green-400 hover:bg-green-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleLockUnlockPettyCashEntry(entry.uuid, true)}>
+                        <button className="bg-green-400 hover:bg-green-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => handleLockUnlockPettyCashEntry(entry.key, true)}>
                             <FaLock className='text-zinc-100' />
                         </button>
                     </Fragment>
@@ -182,11 +202,8 @@ const PettyCashComponent = ({ user }) => {
                                 <thead className='bg-gray-200'>
                                     <tr>
                                         <th className='px-4 py-2'>Actions</th>
-                                        <th className='px-4 py-2'>No</th>
                                         <th className='px-4 py-2'>Voucher No</th>
-                                        <th className='px-4 py-2'>Date</th>      
-                                        <th className='px-4 py-2'>No. Account</th>
-                                        <th className='px-4 py-2'>Account</th>
+                                        <th className='px-4 py-2'>Date</th>
                                         <th className='px-4 py-2'>Description</th>
                                         <th className='px-4 py-2'>Type</th>
                                         <th className='px-4 py-2'>Debit</th>
@@ -196,16 +213,12 @@ const PettyCashComponent = ({ user }) => {
                                 </thead>
                                 <tbody>
                                     {currentEntries.map((entry, index) => (
-                                        <tr key={entry.uuid} className='hover:bg-gray-100'>
+                                        <tr key={entry.key} className='hover:bg-gray-100'>
                                             <td className="shadow-md border border-slate-200 mx-4 my-4 p-4 flex justify-center items-center space-x-2">
                                                 {renderActionButtons(entry)}
                                             </td>
-                                            <td className='border border-slate-200 px-4 py-2'>{indexOfFirstEntry + index + 1}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{entry.noVoucher}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{formatDate(entry.tanggal)}</td>
-                                            
-                                            <td className='border border-slate-200 px-4 py-2'>{entry.account}</td>
-                                            <td className='border border-slate-200 px-4 py-2'>{entry.description}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{entry.detail}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{entry.jenis}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{entry.debit}</td>
@@ -234,16 +247,16 @@ const PettyCashComponent = ({ user }) => {
                 user={user}
                 onSave={savePettyCashEntry}
             />
-            <EditPettyCash
-                isVisible={showEditModal}
-                onClose={() => setShowEditModal(false)}
-                pettyCashEntryId={selectedPettyCashEntryId}
-                user={user}
-            />
+<EditPettyCash
+    isVisible={showEditModal}
+    onClose={() => setShowEditModal(false)}
+    pettyCashEntryId={selectedPettyCashEntryKey} // Menggunakan selectedPettyCashEntryKey sebagai prop
+/>
+
             <HapusPettyCash
                 isVisible={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
-                pettyCashEntryId={selectedPettyCashEntryId}
+                pettyCashEntryId={selectedPettyCashEntryKey}
                 user={user}
             />
             {errorMessage && (
