@@ -19,6 +19,7 @@ const ReportPettyCash = () => {
         try {
             const response = await axios.get("http://localhost:5000/petty_cash");
             setPettyCashEntries(response.data);
+            console.log(response.data)
         } catch (error) {
             console.error("Error fetching petty cash entries: ", error);
         }
@@ -58,24 +59,39 @@ const ReportPettyCash = () => {
 
     const exportToExcel = () => {
         const headers = [
-            "Description",
             "Date",
+            "No Voucher",
+            "Divisi",
+            "Karyawan",
+            "No Account",
+            "Account",
             "Debit",
             "Credit",
+            "Detail",
             "Created By"
         ];
     
         const dataForExport = currentEntries.map(entry => ({
-            Description: entry.description,
+        
             Date: new Date(entry.tanggal),
+            "No Voucher": entry.noVoucher,
+            Divisi: entry.divisi,
+            Karyawan: entry.karyawan,
+            "No Account": entry.account,
+            Account: entry.description,
             Debit: entry.debit,
             Credit: entry.credit,
+            Detail: entry.detail,
             "Created By": entry.createdBy,
         }));
     
         dataForExport.push({
-            Description: 'Total',
-            Date: '',
+            NoVoucher: '',
+            Date:'',
+            Divisi:'',
+            Karyawan:'',
+            NoAccount:'',
+            Account: 'Total',
             Debit: totalDebit,
             Credit: totalCredit,
             "Created By": '',
@@ -135,29 +151,40 @@ const ReportPettyCash = () => {
                             <table className="table-auto w-full mb-3  border-collapse border border-gray-300">
                                 <thead className="bg-gray-200">
                                     <tr>
-                                        <th className="px-4 py-2">Account</th>
-                                        <th className="px-4 py-2">Detail</th>
+                                        <th className="px-4 py-2">No Voucher</th>
                                         <th className="px-4 py-2">Date</th>
+                                        <th className="px-4 py-2">Divisi</th>
+                                        <th className="px-4 py-2">Karyawan</th>
+                                        <th className="px-4 py-2">No. Account</th>
+                                        <th className="px-4 py-2">Account</th>
                                         <th className="px-4 py-2">Debit</th>
                                         <th className="px-4 py-2">Credit</th>
+                                        <th className="px-4 py-2">Description</th>
                                         <th className="px-4 py-2">Created By</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {currentEntries.map((entry, index) => (
                                         <tr key={index} className="hover:bg-gray-100">
+                                            <td className="border border-slate-200 px-4 py-2">{entry.noVoucher}</td>
+                                            <td className="border border-slate-200 px-4 py-2">{formatDate(entry.tanggal)}</td>
+                                            <td className="border border-slate-200 px-4 py-2">{entry.divisi}</td>
+                                            <td className="border border-slate-200 px-4 py-2">{entry.karyawan}</td>
                                             <td className="border border-slate-200 px-4 py-2">{entry.account}</td>
                                             <td className="border border-slate-200 px-4 py-2">{entry.description}</td>
-                                            <td className="border border-slate-200 px-4 py-2">{formatDate(entry.tanggal)}</td>
+
+                                            
+                                            
                                             <td className="border border-slate-200 px-4 py-2">{formatCurrency(entry.debit)}</td>
                                             <td className="border border-slate-200 px-4 py-2">{formatCurrency(entry.credit)}</td>
+                                            <td className="border border-slate-200 px-4 py-2">{entry.detail}</td>
                                             <td className="border border-slate-200 px-4 py-2">{entry.createdBy}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colSpan="3" className="px-4 py-2 font-semibold text-right">Total:</td>
+                                        <td colSpan="6" className="px-4 py-2 font-semibold text-right">Total:</td>
                                         <td className="border border-slate-200 px-4 py-2 font-semibold">{formatCurrency(totalDebit)}</td>
                                         <td className="border border-slate-200 px-4 py-2 font-semibold">{formatCurrency(totalCredit)}</td>
                                         <td className="border border-slate-200 px-4 py-2"></td>

@@ -152,7 +152,7 @@ const PettyCashComponent = ({ user }) => {
                 <div className='text-2xl font-semibold'>
                     <h1>Petty Cash Entries</h1>
                 </div>
-                <div className='bg-zinc-100 mt-5 shadow-md rounded h-full '>
+                <div className='bg-zinc-100 mt-5 shadow-md rounded h-full'>
                     <div className='m-3 p-1'>
                         <button
                             className='flex rounded bg-blue-400 hover:bg-blue-500 duration-500 p-2 mt-2 shadow-md'
@@ -178,13 +178,15 @@ const PettyCashComponent = ({ user }) => {
                             <option value={100}>100</option>
                         </select>
                         <div className='mt-2'>
-                            <table className='table-auto w-full mb-3  border-collapse border border-gray-300'>
+                            <table className='table-auto w-full mb-3 border-collapse border border-gray-300'>
                                 <thead className='bg-gray-200'>
                                     <tr>
                                         <th className='px-4 py-2'>Actions</th>
                                         <th className='px-4 py-2'>No</th>
                                         <th className='px-4 py-2'>Voucher No</th>
-                                        <th className='px-4 py-2'>Date</th>
+                                        <th className='px-4 py-2'>Date</th>      
+                                        <th className='px-4 py-2'>No. Account</th>
+                                        <th className='px-4 py-2'>Account</th>
                                         <th className='px-4 py-2'>Description</th>
                                         <th className='px-4 py-2'>Type</th>
                                         <th className='px-4 py-2'>Debit</th>
@@ -201,6 +203,9 @@ const PettyCashComponent = ({ user }) => {
                                             <td className='border border-slate-200 px-4 py-2'>{indexOfFirstEntry + index + 1}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{entry.noVoucher}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{formatDate(entry.tanggal)}</td>
+                                            
+                                            <td className='border border-slate-200 px-4 py-2'>{entry.account}</td>
+                                            <td className='border border-slate-200 px-4 py-2'>{entry.description}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{entry.detail}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{entry.jenis}</td>
                                             <td className='border border-slate-200 px-4 py-2'>{entry.debit}</td>

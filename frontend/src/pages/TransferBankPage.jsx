@@ -4,9 +4,10 @@ import Layout from '../components/layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getMe } from '../features/authSlice';
-import RecordSuratMasuk from './../components/RecordSuratMasuk';
 
-const FileSuratMasukPage = () => {
+import TransferBankComponent from '../components/transfer_bank/TransferBank'; // Mengubah nama komponen menjadi TransferBankComponent
+
+const TransferBankPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isError, user } = useSelector((state) => state.auth);
@@ -28,9 +29,9 @@ const FileSuratMasukPage = () => {
 
   return (
     <Layout>
-      <RecordSuratMasuk user={user} />
+      <TransferBankComponent user={user} /> 
     </Layout>
   );
 };
 
-export default FileSuratMasukPage;
+export default TransferBankPage;

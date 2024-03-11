@@ -39,21 +39,21 @@ const Pagination = ({ totalEntries, entriesPerPage, currentPage, onPageChange })
     };
 
     return (
-        <div className="mt-4">
+        <div className="mt-4 flex justify-center">
             <nav>
-                <ul className="pagination flex flex-row justify-center">
+                <ul className="pagination flex flex-row">
                     <li className={`page-item ${currentPage === 1 ? 'hidden' : ''}`}>
-                        <button onClick={() => onPageChange(currentPage - 1)} className="shadow-md page-link bg-gray-200 px-3 py-1 rounded-lg mr-2">
+                        <button onClick={() => onPageChange(currentPage - 1)} className="page-link px-3 py-2 rounded-lg bg-blue-500 text-white focus:outline-none focus:bg-blue-600 transition duration-300 ease-in-out hover:bg-blue-600">
                             Prev
                         </button>
                     </li>
                     {getPageNumbers().map((page, index) => (
                         <React.Fragment key={index}>
                             {page === "..." ? (
-                                <span className="page-ellipsis mr-2">...</span>
+                                <li className="page-ellipsis mx-2">...</li>
                             ) : (
                                 <li className={`page-item ${currentPage === page ? 'active' : ''}`}>
-                                    <button onClick={() => onPageChange(page)} className="shadow-md page-link bg-gray-200 px-3 py-1 rounded-lg mr-2">
+                                    <button onClick={() => onPageChange(page)} className={`page-link px-3 py-2 rounded-lg bg-gray-200 text-gray-700 focus:outline-none focus:bg-gray-300 focus:text-gray-800 ${currentPage === page ? 'bg-gray-400' : 'hover:bg-gray-300'}`}>
                                         {page}
                                     </button>
                                 </li>
@@ -61,7 +61,7 @@ const Pagination = ({ totalEntries, entriesPerPage, currentPage, onPageChange })
                         </React.Fragment>
                     ))}
                     <li className={`page-item ${currentPage === totalPages ? 'hidden' : ''}`}>
-                        <button onClick={() => onPageChange(currentPage + 1)} className="shadow-md page-link bg-gray-200 px-3 py-1 rounded-lg mr-2">
+                        <button onClick={() => onPageChange(currentPage + 1)} className="page-link px-3 py-2 rounded-lg bg-blue-500 text-white focus:outline-none focus:bg-blue-600 transition duration-300 ease-in-out hover:bg-blue-600">
                             Next
                         </button>
                     </li>

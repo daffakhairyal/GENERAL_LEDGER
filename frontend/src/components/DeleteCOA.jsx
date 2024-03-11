@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
 
 const HapusCOA = ({ isVisible, onClose, COAId }) => {
     const [name, setName] = useState("");
     const [msg, setMsg] = useState("");
-    const ref = useRef(null);
 
     useEffect(() => {
         if (isVisible && COAId) {
@@ -23,24 +22,6 @@ const HapusCOA = ({ isVisible, onClose, COAId }) => {
         }
     }, [isVisible, COAId]);
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (ref.current && !ref.current.contains(event.target)) {
-                onClose();
-            }
-        };
-
-        if (isVisible) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isVisible, onClose]);
-
     const deleteCOA = async () => {
         try {
             await axios.delete(`http://localhost:5000/chart_of_account/${COAId}`);
@@ -54,11 +35,13 @@ const HapusCOA = ({ isVisible, onClose, COAId }) => {
         }
     };
 
-    if (!isVisible) return null;
+    const handleCancel = () => {
+        onClose(); // Menutup komponen saat tombol Batal diklik
+    };
 
     return (
-        <div className='fixed inset-0 flex items-center justify-center z-50 overflow-auto bg-black bg-opacity-50'>
-            <div className="bg-white p-8 rounded-lg shadow-md w-96" ref={ref}>
+        <div className={`fixed inset-0 flex justify-center items-center z-50 overflow-auto bg-black bg-opacity-50 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <div className="bg-white p-8 rounded-lg shadow-md mt-8 ">
                 <h2 className="text-2xl font-semibold mb-4">Hapus Chart of Account</h2>
                 <div className="mb-4">
                     <p className="text-gray-700 font-medium mb-2">Apakah Anda yakin ingin menghapus Chart of Account ini?</p>
@@ -66,7 +49,7 @@ const HapusCOA = ({ isVisible, onClose, COAId }) => {
                 </div>
                 <div className="flex justify-end">
                     <button type="button" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md" onClick={deleteCOA}>Hapus</button>
-                    <button type="button" className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md ml-2" onClick={() => onClose()}>Batal</button>
+                    <button type="button" className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md ml-2" onClick={handleCancel}>Batal</button>
                 </div>
             </div>
         </div>
