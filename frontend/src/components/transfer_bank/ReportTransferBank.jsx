@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import Pagination from "../Pagination";
 import * as XLSX from 'xlsx';
+import { SiMicrosoftexcel } from "react-icons/si";
 
 const ReportTransferBank = () => {
     const [transferBankEntries, setTransferBankEntries] = useState([]);
@@ -39,11 +40,14 @@ const ReportTransferBank = () => {
     };
 
     const filteredEntries = transferBankEntries.filter(entry => {
-        return entry.description.toLowerCase().includes(searchTerm.toLowerCase()) &&
-               entry.createdBy.toLowerCase().includes(searchTerm.toLowerCase()) &&
-               (fromDate === '' || new Date(entry.tanggal) >= new Date(fromDate)) &&
-               (toDate === '' || new Date(entry.tanggal) <= new Date(toDate));
+        // Check if any field contains the search term
+        return Object.values(entry).some(value =>
+            typeof value === 'string' && value.toLowerCase().includes(searchTerm.toLowerCase())
+        ) &&
+        (fromDate === '' || new Date(entry.tanggal) >= new Date(fromDate)) &&
+        (toDate === '' || new Date(entry.tanggal) <= new Date(toDate));
     });
+    
 
     const indexOfLastEntry = Math.min(currentPage * entriesPerPage, filteredEntries.length);
     const indexOfFirstEntry = Math.max(0, indexOfLastEntry - entriesPerPage);
@@ -127,9 +131,9 @@ const ReportTransferBank = () => {
                         </select>
                         <button
                             onClick={exportToExcel}
-                            className="p-2 ml-2 mt-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                            className="p-2 ml-2 mt-2 bg-green-500 hover:bg-green-600 duration-300 text-white rounded hover:bg-blue-700"
                         >
-                            Export to Excel
+                            <div className="flex"><SiMicrosoftexcel className="text-lg mt-1 mr-2"/>Export to Excel</div>
                         </button>
                         <div className='mt-2'>
                             <table className="table-auto w-full mb-3  border-collapse border border-gray-300">
