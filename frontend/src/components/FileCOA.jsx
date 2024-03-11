@@ -53,33 +53,37 @@ const FileCOA = ({ user }) => {
     return (
         <Fragment>
             <div className='m-8'>
-                <div className='text-2xl font-semibold'>
-                    <h1>COA</h1>
+                <div className='text-2xl font-semibold mb-4'>
+                    <h1>Chart of Accounts</h1>
                 </div>
-                <div className='bg-zinc-100 mt-5 shadow-md rounded h-full w-full '>
-                    <div className='m-3 p-1'>
-                        <button className='flex rounded bg-blue-400 hover:bg-blue-500 duration-500 p-2 mt-2 shadow-md' onClick={() => setShowTambahModal(true)}>
-                            <IoMdAddCircle className='text-zinc-100 text-xl mt-0.5' />
-                            <span className='ml-1 text-zinc-100'>Tambah COA</span>
-                        </button>
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="p-2 mt-2 border border-gray-300 rounded"
-                        />
-                        <select
-                            className="p-2 ml-2 mt-2 border border-gray-300 rounded"
-                            onChange={(e) => setEntriesPerPage(parseInt(e.target.value))}
-                            value={entriesPerPage}
-                        >
-                            <option value={10}>10</option>
-                            <option value={25}>25</option>
-                            <option value={50}>50</option>
-                            <option value={100}>100</option>
-                        </select>
-                        <div className='mt-2'>
-                            <table className="table-auto w-full mb-3 bg-zinc-200   border-collapse border border-gray-300">
+                <div className='bg-white shadow-md rounded'>
+                    <div className='m-4'>
+                        <div className='flex items-center justify-between mb-4'>
+                            <button className='flex items-center bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm' onClick={() => setShowTambahModal(true)}>
+                                <IoMdAddCircle className='mr-2 text-xl' />
+                                <span>Tambah COA</span>
+                            </button>
+                            <div className='flex items-center'>
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="border border-gray-300 rounded p-2 mr-2"
+                                />
+                                <select
+                                    className="border border-gray-300 rounded p-2"
+                                    onChange={(e) => setEntriesPerPage(parseInt(e.target.value))}
+                                    value={entriesPerPage}
+                                >
+                                    <option value={10}>10</option>
+                                    <option value={25}>25</option>
+                                    <option value={50}>50</option>
+                                    <option value={100}>100</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className='overflow-x-auto'>
+                            <table className="w-full table-auto border-collapse border border-gray-300">
                                 <thead className="bg-gray-200">
                                     <tr>
                                         <th className="px-4 py-2">Actions</th>
@@ -95,42 +99,40 @@ const FileCOA = ({ user }) => {
                                 </thead>
                                 <tbody>
                                     {currentEntries.map((item, index) => (
-                                        <tr key={item.uuid} className="bg-gray-100 hover:bg-gray-300 ">
-                                            <td className="border border-slate-200 px-4 py-2 flex justify-center">
-                                                <button className="bg-blue-400 hover:bg-blue-500 duration-500 text-white font-bold py-2 px-4 rounded" onClick={() => {
+                                        <tr key={item.uuid} className="bg-gray-100 hover:bg-gray-200 ">
+                                            <td className="border px-4 py-2 flex items-center justify-center">
+                                                <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded mr-2" onClick={() => {
                                                     setShowEditModal(true);
                                                     setSelectedCOAId(item.uuid);
                                                 }}>
-                                                    <FaEdit className='text-zinc-100' />
+                                                    <FaEdit className='text-xl' />
                                                 </button>
-                                                <button className="bg-red-400 hover:bg-red-500 duration-500 text-white font-bold py-2 px-4 rounded ml-2" onClick={() => {
+                                                <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded" onClick={() => {
                                                     setShowDeleteModal(true);
                                                     setSelectedCOAId(item.uuid);
                                                 }}>
-                                                    <MdDelete className='text-zinc-100' />
+                                                    <MdDelete className='text-xl' />
                                                 </button>
                                             </td>
-                                            <td className="border border-slate-200 px-4 py-2 text-center">{indexOfFirstEntry + index + 1}</td>
-                                            <td className="border border-slate-200 px-4 py-2 text-center">{item.account}</td>
-                                            <td className="border border-slate-200 px-4 py-2">{item.name}</td>
-                                            <td className="border border-slate-200 px-4 py-2 text-center">{item.induk}</td>
-                                            <td className="border border-slate-200 px-4 py-2 text-center">{item.klasifikasi}</td>
-                                            <td className="border border-slate-200 px-4 py-2 text-center">{item.type}</td>
-                                            <td className="border border-slate-200 px-4 py-2 text-center">{item.level}</td>
-                                            <td className="border border-slate-200 px-4 py-2 text-center">{item.defSaldo}</td>
+                                            <td className="border px-4 py-2 text-center">{indexOfFirstEntry + index + 1}</td>
+                                            <td className="border px-4 py-2 text-center">{item.account}</td>
+                                            <td className="border px-4 py-2">{item.name}</td>
+                                            <td className="border px-4 py-2 text-center">{item.induk}</td>
+                                            <td className="border px-4 py-2 text-center">{item.klasifikasi}</td>
+                                            <td className="border px-4 py-2 text-center">{item.type}</td>
+                                            <td className="border px-4 py-2 text-center">{item.level}</td>
+                                            <td className="border px-4 py-2 text-center">{item.defSaldo}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
-                        <div>
-                            <Pagination className='mt-3 mb-3'
-                                totalEntries={filteredCOA.length}
-                                entriesPerPage={entriesPerPage}
-                                currentPage={currentPage}
-                                onPageChange={onPageChange}
-                            />
-                        </div>
+                        <Pagination className='mt-3 mb-6'
+                            totalEntries={filteredCOA.length}
+                            entriesPerPage={entriesPerPage}
+                            currentPage={currentPage}
+                            onPageChange={onPageChange}
+                        />
                     </div>
                 </div>
             </div>

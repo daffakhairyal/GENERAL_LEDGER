@@ -6,10 +6,10 @@ import { FiX } from 'react-icons/fi';
 import { FaRegPlusSquare } from 'react-icons/fa';
 import { VscSave } from "react-icons/vsc";
 
-const TambahPettyCash = ({ isVisible, onClose, user }) => {
+const TambahTransferBank = ({ isVisible, onClose, user }) => {
     const [initialDate] = useState(new Date().toISOString().slice(0, 10));
     const [selectedDate, setSelectedDate] = useState('');
-    const [pettyCashEntries, setPettyCashEntries] = useState([
+    const [transferBankEntries, setTransferBankEntries] = useState([
         {
             noVoucher: '',
             jenis: '',
@@ -81,25 +81,25 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
         setSearchTerm(value);
         searchAccounts(value);
         setSelectedAccount('');
-        setPettyCashEntries(entries => [{ ...entries[0], description: value }]);
+        setTransferBankEntries(entries => [{ ...entries[0], description: value }]);
     };
 
     const handleAccountChange = (result) => {
         setSelectedAccount(result.account);
-        setPettyCashEntries(entries => [{ ...entries[0], description: result.name, account: result.account }]);
+        setTransferBankEntries(entries => [{ ...entries[0], description: result.name, account: result.account }]);
         setSearchTerm(result.name);
         setSearchResults([]);
     };
 
     const handleEntryChange = (index, field, value) => {
-        setPettyCashEntries(entries => entries.map((item, idx) => idx === index ? { ...item, [field]: value } : item));
+        setTransferBankEntries(entries => entries.map((item, idx) => idx === index ? { ...item, [field]: value } : item));
     };
 
     const addNewEntry = () => {
         setTableEntries([
             ...tableEntries,
             { 
-                ...pettyCashEntries[0], 
+                ...transferBankEntries[0], 
                 tanggal: selectedDate || initialDate, 
                 karyawan,
                 divisi
@@ -116,15 +116,15 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
 
     const editEntry = (index) => {
         const entryToEdit = tableEntries[index];
-        setPettyCashEntries([entryToEdit]);
+        setTransferBankEntries([entryToEdit]);
         setSelectedDate(entryToEdit.tanggal);
         setTableEntries(tableEntries.filter((entry, i) => i !== index));
     };
 
-    const savePettyCashEntry = async (e) => {
+    const saveTransferBankEntry = async (e) => {
         e.preventDefault();
         if (!entriesAdded) {
-            setMsg('Isi petty cash terlebih dahulu.');
+            setMsg('Isi transfer bank terlebih dahulu.');
             setTimeout(() => {
                 setMsg('');
             }, 3000); 
@@ -133,7 +133,7 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
         try {
             const response = await Promise.all(
                 tableEntries.map((entry) =>
-                    axios.post('http://localhost:5000/petty_cash', {
+                    axios.post('http://localhost:5000/transfer_bank', {
                         createdBy: user.name,
                         noVoucher: entry.noVoucher,
                         jenis: entry.jenis,
@@ -149,18 +149,18 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
                 )
             );
             if (response.every(res => res.status === 201)) {
-                setMsg('Petty cash entries berhasil ditambahkan!');
+                setMsg('Transfer bank entries berhasil ditambahkan!');
                 setTableEntries([]);
                 setEntriesAdded(false);
                 window.location.reload();
             } else {
-                setMsg('Terjadi kesalahan saat menyimpan entri petty cash.');
+                setMsg('Terjadi kesalahan saat menyimpan entri transfer bank.');
             }
         } catch (error) {
             if (error.response) {
-                setMsg(error.response.data.msg || 'Terjadi kesalahan saat menyimpan entri petty cash.');
+                setMsg(error.response.data.msg || 'Terjadi kesalahan saat menyimpan entri transfer bank.');
             } else {
-                setMsg('Terjadi kesalahan saat menyimpan entri petty cash.');
+                setMsg('Terjadi kesalahan saat menyimpan entri transfer bank.');
             }
         }
         setTimeout(() => {
@@ -175,10 +175,10 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
     return (
         <div className={`fixed inset-0 flex justify-center items-start z-50 overflow-auto bg-black bg-opacity-50 transition-opacity duration-300 ${isVisible ? 'opacity-100 animate-fade-in' : 'opacity-0 pointer-events-none'}`}>
             <div className="bg-white p-8 rounded-lg shadow-md w-[1200px] mt-8 ">
-                <h2 className='text-2xl font-semibold mb-4'>Tambah Petty Cash</h2>
+                <h2 className='text-2xl font-semibold mb-4'>Tambah Transfer Bank</h2>
                 {msg && <div className='text-green-500 mb-4 animate-fade-in'>{msg}</div>}
-                <form onSubmit={savePettyCashEntry}>
-                    {pettyCashEntries.map((entry, index) => (
+                <form onSubmit={saveTransferBankEntry}>
+                    {transferBankEntries.map((entry, index) => (
                         <div key={index} className='mb-4'>
                             <div className='grid grid-cols-3 gap-4'>
                                 <div>
@@ -207,8 +207,8 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
                                         className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
                                     >
                                         <option value=''>Pilih Jenis</option>
-                                        <option value='Petty Cash Out'>Petty Cash Out</option>
-                                        <option value='Petty Cash In'>Petty Cash In</option>
+                                        <option value='Transfer Masuk'>Transfer Masuk</option>
+                                        <option value='Transfer Keluar'>Transfer Keluar</option>
                                     </select>
                                 </div>
                                 <div>
@@ -227,42 +227,9 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
                                 </div>
                             </div>
                             <div className='grid grid-cols-2 gap-4 mt-4'>
-                            <div>
-                                    <label htmlFor={`karyawan_${index}`} className='block text-gray-700 font-medium mb-2'>
-                                        Karyawan
-                                    </label>
-                                    <input
-                                        type='text'
-                                        id={`karyawan_${index}`}
-                                        name={`karyawan_${index}`}
-                                        value={karyawan}
-                                        onChange={(e) => setKaryawan(e.target.value)}
-                                        className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
-                                        placeholder='Enter employee...'
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor={`divisi_${index}`} className='block text-gray-700 font-medium mb-2'>
-                                        Divisi
-                                    </label>
-                                    <select
-                                        id={`divisi_${index}`}
-                                        name={`divisi_${index}`}
-                                        value={divisi}
-                                        onChange={(e) => setDivisi(e.target.value)}
-                                        className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
-                                    >
-                                        <option value=''>Pilih Divisi</option>
-                                        {divisions.map(division => (
-                                            <option key={division.id} value={division.name}>{division.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                </div>
-                            <div className='grid grid-cols-2 gap-4 mt-4'>
                                 <div>
                                     <label htmlFor={`description_${index}`} className='block text-gray-700 font-medium mb-2'>
-                                        Detail
+                                        Description
                                     </label>
                                     <input
                                         type='text'
@@ -301,7 +268,7 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
                                 </div>
                                 <div>
                                     <label htmlFor={`detail_${index}`} className='block text-gray-700 font-medium mb-2'>
-                                        Description
+                                        Detail
                                     </label>
                                     <input
                                         type='text'
@@ -315,7 +282,37 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
                                 </div>
                             </div>
                             <div className='grid grid-cols-2 gap-4 mt-4'>
-                                
+                                <div>
+                                    <label htmlFor={`karyawan_${index}`} className='block text-gray-700 font-medium mb-2'>
+                                        Karyawan
+                                    </label>
+                                    <input
+                                        type='text'
+                                        id={`karyawan_${index}`}
+                                        name={`karyawan_${index}`}
+                                        value={karyawan}
+                                        onChange={(e) => setKaryawan(e.target.value)}
+                                        className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
+                                        placeholder='Enter employee...'
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor={`divisi_${index}`} className='block text-gray-700 font-medium mb-2'>
+                                        Divisi
+                                    </label>
+                                    <select
+                                        id={`divisi_${index}`}
+                                        name={`divisi_${index}`}
+                                        value={divisi}
+                                        onChange={(e) => setDivisi(e.target.value)}
+                                        className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500'
+                                    >
+                                        <option value=''>Pilih Divisi</option>
+                                        {divisions.map(division => (
+                                            <option key={division.id} value={division.name}>{division.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <div>
                                     <label htmlFor={`debit_${index}`} className='block text-gray-700 font-medium mb-2'>
                                         Debit
@@ -417,17 +414,14 @@ const TambahPettyCash = ({ isVisible, onClose, user }) => {
                                 <td colSpan="7" className="px-4 py-2 font-semibold text-right">Total:</td>
                                 <td className=" px-4 py-2 font-semibold">{totalDebit}</td>
                                 <td className=" px-4 py-2 font-semibold">{totalCredit}</td>
-                                <td className=" px-4 py-2"></td>
-                                <td className=" px-4 py-2"></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-            )}
+                )}
+            </div>
         </div>
-    </div>
-
-);
+    );
 };
 
-export default TambahPettyCash;
+export default TambahTransferBank;

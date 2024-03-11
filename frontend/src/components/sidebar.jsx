@@ -46,7 +46,7 @@ const Sidebar = () => {
     return (
       <div className="flex">
         <div
-          className={`bg-red-800   h-screen p-5 pt-8 ${
+          className={`bg-gray-900   h-screen p-5 pt-8 ${
             open ? "w-72" : "w-20"
           } duration-500 relative`}
         >
@@ -119,18 +119,15 @@ const Sidebar = () => {
                 Chart of Accounts
               </h1>
             </NavLink>
-            
-
-
-            <NavLink to={"/file/journal-entry"}>
-              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
-                Journal Entry
-              </h1>
-            </NavLink>
 
             <NavLink to={"/file/petty_cash"}>
               <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
                 Petty Cash
+              </h1>
+            </NavLink>
+            <NavLink to={"/file/transfer_bank"}>
+              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
+                Transfer Bank
               </h1>
             </NavLink>
 
@@ -164,14 +161,14 @@ const Sidebar = () => {
               activeSubMenus["Report"] ? "opacity-100" : "opacity-0"
             } ${activeSubMenus["Report"] ? "h-auto" : "h-0"} overflow-hidden`}
           >
-            <NavLink to={'/report/general-ledger'}>
-              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
-                General Ledger
-              </h1>
-            </NavLink>
             <NavLink to={'/report/petty_cash'}>
               <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
                 Petty Cash
+              </h1>
+            </NavLink>
+            <NavLink to={'/report/transfer_bank'}>
+              <h1 className="cursor-pointer p-2 hover:text-white duration-500 rounded-md mt-1" >
+                Transfer Bank
               </h1>
             </NavLink>
           </div>

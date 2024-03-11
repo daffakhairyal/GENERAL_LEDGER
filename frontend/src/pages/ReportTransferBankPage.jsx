@@ -4,9 +4,9 @@ import Layout from '../components/layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getMe } from '../features/authSlice';
-import FileSuratMasuk from './../components/FileSuratMasuk';
+import ReportTransferBank from '../components/transfer_bank/ReportTransferBank'; // Mengubah dari ReportPettyCash menjadi ReportTransferBank
 
-const FileSuratMasukPage = () => {
+const ReportTransferBankPage = () => { // Mengubah nama komponen menjadi ReportTransferBankPage
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isError, user } = useSelector((state) => state.auth);
@@ -28,9 +28,9 @@ const FileSuratMasukPage = () => {
 
   return (
     <Layout>
-      <FileSuratMasuk user={user} />
+      <ReportTransferBank user={user} /> {/* Mengubah dari ReportPettyCash menjadi ReportTransferBank */}
     </Layout>
   );
 };
 
-export default FileSuratMasukPage;
+export default ReportTransferBankPage;

@@ -7,9 +7,7 @@ import db from "./config/Database.js";
 import UserRoute from "./routes/UserRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
 import DivisionRoute from "./routes/DivisionRoute.js"
-import SuratMasukRoute from "./routes/SuratMasukRoute.js"
-import SuratKeluarRoute from "./routes/SuratKeluarRoute.js"
-import GLRoute from "./routes/GLRoute.js"
+import TransferBankRoute from "./routes/TransferBankRoute.js"
 import COARoute from "./routes/COARoute.js"
 import PettyCashRoute from "./routes/PettyCashRoute.js"
 
@@ -53,11 +51,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use(UserRoute);
 app.use(AuthRoute);
 app.use(DivisionRoute);
-app.use(SuratMasukRoute);
-app.use(SuratKeluarRoute);
-app.use(GLRoute);
 app.use(COARoute);
-app.use(PettyCashRoute)
+app.use(PettyCashRoute);
+app.use(TransferBankRoute)
 
 store.sync();
 app.listen(PORT,()=> {
